@@ -1,6 +1,11 @@
 import yaml
 
 
+class IndentDumper(yaml.Dumper):
+    def increase_indent(self, flow=False, indentless=False):
+        return super(IndentDumper, self).increase_indent(flow, False)
+
+
 def create_config(config_name) -> None:
     with open(config_name, 'w'):
         pass
@@ -13,7 +18,7 @@ def read_config(config_name) -> dict:
 
 def write_config(config_name, config_data) -> None:
     with open(config_name, 'w', encoding='utf-8') as config_file:
-        yaml.dump(config_data, config_file)
+        yaml.dump(config_data, config_file, IndentDumper)
 
 
 def write_base_settings_config(config_name) -> None:
