@@ -1,47 +1,47 @@
 import os
 import unittest
 import config_manager
+import tempfile
 
 
 class TestConfigManager(unittest.TestCase):
     def setUp(self):
-        self.test_dir = os.path.dirname(os.path.abspath(__file__))
-        self.config_path = os.path.join(self.test_dir, 'test_config.yaml')
+        self.test_config_file = tempfile.mktemp()
 
     def tearDown(self):
-        if os.path.exists(self.config_path):
-            os.remove(self.config_path)
+        if os.path.exists(self.test_config_file):
+            os.remove(self.test_config_file)
 
     def test_create_config(self):
         """
         Тест для создания конфига
         """
-        self.assertFalse(os.path.exists(self.config_path))
-        config_manager.create_config(self.config_path)
-        self.assertTrue(os.path.exists(self.config_path))
+        self.assertFalse(os.path.exists(self.test_config_file))
+        config_manager.create_config(self.test_config_file)
+        self.assertTrue(os.path.exists(self.test_config_file))
 
     def test_read_not_exist_config(self):
         """
         Тест для чтения несуществующего файла
         """
         with self.assertRaises(FileNotFoundError):
-            config_manager.read_config(self.config_path)
+            config_manager.read_config(self.test_config_file)
 
     def test_read_empty_config(self):
         """
         Тест для чтения пустого конфига
         """
-        config_manager.create_config(self.config_path)
-        config_data = config_manager.read_config(self.config_path)
+        config_manager.create_config(self.test_config_file)
+        config_data = config_manager.read_config(self.test_config_file)
         self.assertEqual(config_data, {})
 
     def test_read_not_empty_config(self):
         """
         Тест для чтения не пустого файла
         """
-        config_manager.create_config(self.config_path)
-        config_manager.write_base_settings_config(self.config_path)
-        config_data = config_manager.read_config(self.config_path)
+        config_manager.create_config(self.test_config_file)
+        config_manager.write_base_settings_config(self.test_config_file)
+        config_data = config_manager.read_config(self.test_config_file)
 
         expect_data = {'directories_to_clean': ['first/path/example', 'second/path/example']}
         self.assertEqual(config_data, expect_data)
@@ -50,10 +50,10 @@ class TestConfigManager(unittest.TestCase):
         """
         Тест на проверку форматера при создании конфига
         """
-        config_manager.create_config(self.config_path)
-        config_manager.write_base_settings_config(self.config_path)
+        config_manager.create_config(self.test_config_file)
+        config_manager.write_base_settings_config(self.test_config_file)
 
-        with open(self.config_path, 'r', encoding='utf-8') as config_file:
+        with open(self.test_config_file, 'r', encoding='utf-8') as config_file:
             config_data = config_file.read()
 
             expect_data = (f'directories_to_clean:\n'
