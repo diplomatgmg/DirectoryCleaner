@@ -41,6 +41,6 @@ class Cleaner:
 
         if size_megabytes >= 1000:
             size_gigabytes = size_megabytes / 1024
-            print(f"Успешно очищено {size_gigabytes:.2f} ГБ")
+            print(f"\n\nУспешно очищено {size_gigabytes:.2f} ГБ")
         else:
-            print(f"Успешно очищено {size_megabytes:.2f} МБ")
+            print(f"\n\nУспешно очищено {size_megabytes:.2f} МБ")
