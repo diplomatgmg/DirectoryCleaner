@@ -34,7 +34,7 @@ class TestConfigManager(unittest.TestCase):
         """
         config_manager.create_config(self.test_config_file)
         config_data = config_manager.read_config(self.test_config_file)
-        self.assertEqual(config_data, {})
+        self.assertEqual(config_data, {"directories": []})
 
     def test_read_not_empty_config(self):
         """
@@ -44,9 +44,7 @@ class TestConfigManager(unittest.TestCase):
         config_manager.write_base_settings_config(self.test_config_file)
         config_data = config_manager.read_config(self.test_config_file)
 
-        expect_data = {
-            "directories_to_clean": ["first/path/example", "second/path/example"]
-        }
+        expect_data = {"directories": ["first/path/example", "second/path/example"]}
         self.assertEqual(config_data, expect_data)
 
     def test_write_config_formatter(self):
@@ -59,11 +57,7 @@ class TestConfigManager(unittest.TestCase):
         with open(self.test_config_file, "r", encoding="utf-8") as config_file:
             config_data = config_file.read()
 
-            expect_data = (
-                f"directories_to_clean:\n"
-                f"  - first/path/example\n"
-                f"  - second/path/example\n"
-            )
+            expect_data = f"first/path/example\n" f"second/path/example\n"
 
             self.assertEqual(config_data, expect_data)
 
